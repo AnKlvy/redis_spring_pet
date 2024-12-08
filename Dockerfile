@@ -1,6 +1,7 @@
-FROM openjdk:17
+FROM openjdk:17-jdk-slim
+
 WORKDIR /usr/src/app
-CMD ["./gradlew", "clean", "bootJar"]
+CMD ["./gradlew", "clean", "build"]
 COPY build/libs/redis_spring-0.0.1-SNAPSHOT.jar app.jar
 
 #EXPOSE 8080

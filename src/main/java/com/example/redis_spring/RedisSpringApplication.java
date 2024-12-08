@@ -18,8 +18,8 @@ public class RedisSpringApplication {
 		return "hello";
 	}
 
-	@GetMapping("/session")
-	public String getSession(HttpSession session) {
-		return "session: " + session;
-	}
+//	@GetMapping("/session")
+//	public String getSession(HttpSession session) {
+//		return "session: " + session;
+//	}
 }

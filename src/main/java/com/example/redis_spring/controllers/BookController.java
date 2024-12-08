@@ -6,18 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/books")
 public class BookController {
 
     private final BookService bookService;
-
-//    @GetMapping
-//    public ResponseEntity<List<Book>> getBooks() {
-//        List<Book> books = bookService.getBooks();
-//        return books != null ? ResponseEntity.ok(books) : ResponseEntity.notFound().build();
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
@@ -36,4 +32,12 @@ public class BookController {
         bookService.deleteBook(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/get/popular")
+    public ResponseEntity<List<Book>> getPopularBooks() {
+        List<Book> popularBooks = bookService.getPopularBooks();
+        return ResponseEntity.ok(popularBooks);
+    }
+
 }
+
