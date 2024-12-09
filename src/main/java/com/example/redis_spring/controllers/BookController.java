@@ -22,9 +22,15 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> addOrUpdateBook(@RequestBody Book book) {
-        bookService.updateBook(book);
+    public ResponseEntity<Book> addBook(@RequestBody Book book) {
+        bookService.saveBook(book);
         return ResponseEntity.ok(book);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
+        Book updatedBook = bookService.updateBook(id, book);
+        return ResponseEntity.ok(updatedBook);
     }
 
     @DeleteMapping("/{id}")

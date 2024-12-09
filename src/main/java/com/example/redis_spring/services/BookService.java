@@ -49,12 +49,40 @@ public class BookService {
         return null;
     }
 
-    public void updateBook(Book book) {
+    public void saveBook(Book book) {
         log.info("Updating book in database: {}", book);
         bookRepository.save(book);
 
         log.info("Caching updated book with ID: {}", book.getId());
         cacheService.cacheObject("book:" + book.getId(), book, 1, TimeUnit.MINUTES);
+    }
+    public Book updateBook(Long id, Book updatedBook) {
+        final String cacheKey = "book:" + id;
+        log.info("Attempting to update book with ID: {}", id);
+
+        Optional<Book> existingBookOptional = bookRepository.findById(id);
+        if (existingBookOptional.isPresent()) {
+            Book existingBook = existingBookOptional.get();
+
+            existingBook.setTitle(updatedBook.getTitle());
+            existingBook.setAuthor(updatedBook.getAuthor());
+            existingBook.setPrice(updatedBook.getPrice());
+            existingBook.setGenre(updatedBook.getGenre());
+            existingBook.setDescription(updatedBook.getDescription());
+            existingBook.setPopularity(updatedBook.getPopularity());
+
+            bookRepository.save(existingBook);
+            log.info("Book updated in database: {}", existingBook);
+
+            // Обновляем кеш
+            cacheService.cacheObject(cacheKey, existingBook, 1, TimeUnit.MINUTES);
+            log.info("Updated book cached with key: {}", cacheKey);
+
+            return existingBook;
+        }
+
+        log.warn("Book with ID: {} not found for update", id);
+        return null;
     }
 
     public void deleteBook(Long bookId) {
