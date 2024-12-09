@@ -13,10 +13,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)  // Новый способ отключения CSRF
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/books/**").permitAll()  // Новый способ настройки разрешений
-                );
+                .csrf(AbstractHttpConfigurer::disable); // Новый способ отключения CSRF
+
         return http.build();
     }
 }
