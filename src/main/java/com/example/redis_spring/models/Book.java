@@ -21,5 +21,5 @@
         private Long price;
         private String genre;
         private String description;
-        private Integer popularity;
+        private Integer popularity = 0;
     }
