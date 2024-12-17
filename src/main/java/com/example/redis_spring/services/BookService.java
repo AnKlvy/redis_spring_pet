@@ -1,5 +1,6 @@
 package com.example.redis_spring.services;
 
+import com.example.redis_spring.rabbitmq.BookPublisher;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.example.redis_spring.models.Book;
 import com.example.redis_spring.repositories.BookRepository;
@@ -18,6 +19,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final CacheService cacheService;
+    private final BookPublisher bookPublisher;
 
     public Book getBook(Long id) {
         final String cacheKey = "book:" + id;
@@ -52,7 +54,7 @@ public class BookService {
     public void saveBook(Book book) {
         log.info("Updating book in database: {}", book);
         bookRepository.save(book);
-
+        bookPublisher.sendBookByGenre(book);
         log.info("Caching updated book with ID: {}", book.getId());
         cacheService.cacheObject("book:" + book.getId(), book, 1, TimeUnit.MINUTES);
     }

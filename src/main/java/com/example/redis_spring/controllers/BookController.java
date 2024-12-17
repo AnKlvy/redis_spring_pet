@@ -2,9 +2,11 @@ package com.example.redis_spring.controllers;
 
 import com.example.redis_spring.models.Book;
 import com.example.redis_spring.services.BookService;
+import com.example.redis_spring.services.MinioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final MinioService minioService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
@@ -44,6 +47,21 @@ public class BookController {
         List<Book> popularBooks = bookService.getPopularBooks();
         return ResponseEntity.ok(popularBooks);
     }
+    @PostMapping("/upload-image")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            String response = minioService.uploadFile(file.getBytes(), file.getOriginalFilename());
+            return ResponseEntity.ok("Файл успешно загружен: " + response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Ошибка загрузки файла: " + e.getMessage());
+        }
+    }
 
+    @GetMapping("/images")
+    public ResponseEntity<String> getUploadedImages() {
+        String response = minioService.getFiles();
+        return ResponseEntity.ok(response);
+    }
 }
+
 
